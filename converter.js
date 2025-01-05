@@ -16,25 +16,18 @@ function convertPNG() {
             ctx.drawImage(img, 0, 0);
 
             const imageData = ctx.getImageData(0, 0, img.width, img.height);
-            const data = new Uint8Array(imageData.data);
+            const data = new Uint8Array(imageData.data.buffer);
 
-            // Log image data for debugging
-            console.log("Image Data:", {
-                width: img.width,
-                height: img.height,
-                data: data,
-                channels: 4, // assuming RGBA
-                colorspace: 0 // assuming sRGB
-            });
-
-            // Correctly format the input data for Qoi encoding
+            // Ensure correct data structure for Qoi encoding
             const qoiInput = {
                 width: img.width,
                 height: img.height,
-                data: data,
                 channels: 4, // assuming RGBA
-                colorspace: 0 // assuming sRGB
+                colorspace: 0, // assuming sRGB
+                data: Array.from(data)
             };
+
+            console.log("Formatted QOI Input Data:", qoiInput);
 
             // Qoi encoding using the library
             try {
