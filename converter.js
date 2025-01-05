@@ -1,5 +1,5 @@
 function convertPNG() {
-    console.log("convertPNG function called"); 
+    console.log("convertPNG function called");
     const fileInput = document.getElementById('pngFile');
     const file = fileInput.files[0];
     const reader = new FileReader();
@@ -41,6 +41,11 @@ function convertPNG() {
                     channels: qoiInput.channels,
                     colorspace: qoiInput.colorspace
                 });
+
+                if (!qoiData) {
+                    throw new Error("QOI encoding failed.");
+                }
+
                 console.log("QOI Encoded Data Length:", qoiData.length);
 
                 // Convert QOI data to base64
