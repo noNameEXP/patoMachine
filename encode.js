@@ -19,6 +19,7 @@ function encode(colorData, description) {
     let p = 0;
     const pixelLength = width * height * channels;
     const pixelEnd = pixelLength - channels;
+    const chunkSize = 10000; // Adjust this value based on the environment
 
     if (width < 0 || width >= 4294967296) {
         throw new Error('QOI.encode: Invalid description.width');
@@ -149,6 +150,11 @@ function encode(colorData, description) {
         prevGreen = green;
         prevBlue = blue;
         prevAlpha = alpha;
+
+        // Process in chunks to avoid maximum call stack size exceeded error
+        if ((pixelPos + channels) % chunkSize === 0) {
+            setTimeout(() => {}, 0);
+        }
     }
 
     // 00000001 end marker/padding
