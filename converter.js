@@ -1,6 +1,5 @@
 function convertPNG() {
     console.log("convertPNG function called"); // Verify function execution
-    console.log("hate")
     const fileInput = document.getElementById('pngFile');
     const file = fileInput.files[0];
     const reader = new FileReader();
@@ -17,7 +16,16 @@ function convertPNG() {
             ctx.drawImage(img, 0, 0);
 
             const imageData = ctx.getImageData(0, 0, img.width, img.height);
-            const data = new Uint8Array(imageData.data.buffer);
+            const data = new Uint8Array(imageData.data);
+
+            // Log image data for debugging
+            console.log("Image Data:", {
+                width: img.width,
+                height: img.height,
+                data: data,
+                channels: 4, // assuming RGBA
+                colorspace: 0 // assuming sRGB
+            });
 
             // Correctly format the input data for Qoi encoding
             const qoiInput = {
