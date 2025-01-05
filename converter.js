@@ -1,12 +1,15 @@
 function convertPNG() {
-    console.log("convertPNG function called"); // Verify function execution
+    console.log("convertPNG function called");
     const fileInput = document.getElementById('pngFile');
     const file = fileInput.files[0];
     const reader = new FileReader();
 
     reader.onload = function(event) {
+        const arrayBuffer = event.target.result;
+
+        const blob = new Blob([arrayBuffer], { type: 'image/png' });
         const img = new Image();
-        img.src = event.target.result;
+        img.src = URL.createObjectURL(blob);
 
         img.onload = function() {
             const canvas = document.createElement('canvas');
@@ -18,11 +21,11 @@ function convertPNG() {
             const imageData = ctx.getImageData(0, 0, img.width, img.height);
             const data = new Uint8Array(imageData.data.buffer);
             console.log("Img Data: ", data);
-            
-             // Base64 encoding
+
+            // Base64 encoding
             let Extra_base64Data = arrayBufferToBase64(data);
             console.log("Extra Base64: ", Extra_base64Data);
-            
+
             const qoiInput = {
                 width: img.width,
                 height: img.height,
@@ -34,28 +37,29 @@ function convertPNG() {
             console.log("Formatted QOI Input Data:", qoiInput);
 
             try {
-                // Use the locally included QOI encode function
+                // 1. Encode image data to QOI
                 let qoiData = QOI.encode(qoiInput.data, {
                     width: qoiInput.width,
                     height: qoiInput.height,
                     channels: qoiInput.channels,
                     colorspace: qoiInput.colorspace
                 });
-                console.log("QOI Data Length: ", qoiData);
+                console.log("QOI Data Length: ", qoiData.length);
 
-                // Base64 encoding
+                // 2. Convert QOI data to base64
                 let base64Data = arrayBufferToBase64(new Uint8Array(qoiData).buffer);
                 console.log("First Base64 Data Length: ", base64Data.length);
                 console.log("First Base64: ", base64Data);
-                
-                // zLib.Deflate compression (using pako library)
+
+                // 3. Compress base64 string using zLib.Deflate (pako library)
                 let compressedData = pako.deflate(base64Data);
                 console.log("Compressed Data Length: ", compressedData.length);
 
-                // Final Base64 encoding
+                // 4. Convert compressed data to base64
                 let finalBase64Data = arrayBufferToBase64(compressedData);
                 console.log("Final Base64 Data Length: ", finalBase64Data.length);
                 console.log("Final Base64: ", finalBase64Data);
+
                 // Display the encoded data
                 document.getElementById('output').textContent = finalBase64Data;
             } catch (error) {
@@ -66,8 +70,7 @@ function convertPNG() {
     };
 
     if (file) {
-       reader.readAsDataURL(file);//reader.readAsArrayBuffer(file);//reader.readAsDataURL(file);
-        // error might be above but who cares lol
+        reader.readAsArrayBuffer(file);  // Read the file as ArrayBuffer
     } else {
         alert('Please select a PNG file.');
     }
