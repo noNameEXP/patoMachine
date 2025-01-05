@@ -1,18 +1,6 @@
 "use strict";
 
-/**
- * Encode a QOI file.
- *
- * @param {Uint8Array|Uint8ClampedArray} colorData Array containing the color information for each pixel of the image (left to right, top to bottom)
- * @param {object} description
- * @param {int} description.width Width of the image
- * @param {int} description.height Height of the image
- * @param {int} description.channels Number of channels in the image (3: RGB, 4: RGBA)
- * @param {int} description.colorspace Colorspace used in the image (0: sRGB with linear alpha, 1: linear)
- *
- * @returns {ArrayBuffer} ArrayBuffer containing the QOI file content
- */
-function encode (colorData, description) {
+function encode(colorData, description) {
     const width = description.width;
     const height = description.height;
     const channels = description.channels;
@@ -177,4 +165,6 @@ function encode (colorData, description) {
     return result.buffer.slice(0, p);
 }
 
-module.exports = encode;
+if (typeof window !== 'undefined') {
+    window.encode = encode;
+}
