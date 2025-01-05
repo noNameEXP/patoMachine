@@ -31,7 +31,7 @@ function convertPNG() {
 
             try {
                 // Use the locally included QOI encode function
-                let qoiData = QOI.encodeChunked(qoiInput.data, {
+                let qoiData = QOI.encode(qoiInput.data, {
                     width: qoiInput.width,
                     height: qoiInput.height,
                     channels: qoiInput.channels,
