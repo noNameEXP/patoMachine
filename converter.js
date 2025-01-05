@@ -24,7 +24,7 @@ function convertPNG() {
                 height: img.height,
                 channels: 4, // assuming RGBA
                 colorspace: 0, // assuming sRGB
-                data: data
+                data: data // Ensure this is Uint8Array
             };
 
             console.log("Formatted QOI Input Data:", qoiInput);
