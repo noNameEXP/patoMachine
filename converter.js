@@ -18,20 +18,21 @@ function convertPNG() {
             const imageData = ctx.getImageData(0, 0, img.width, img.height);
             const data = new Uint8Array(imageData.data.buffer);
 
-            // Ensure correct data structure for Qoi encoding
+            // Correctly format the input data for Qoi encoding
             const qoiInput = {
                 width: img.width,
                 height: img.height,
                 channels: 4, // assuming RGBA
                 colorspace: 0, // assuming sRGB
-                data: Array.from(data)
+                data: data
             };
 
             console.log("Formatted QOI Input Data:", qoiInput);
 
             // Qoi encoding using the library
             try {
-                let qoiData = QOI.encode(qoiInput);
+                // Assuming QOI.encode expects separate arguments
+                let qoiData = QOI.encode(qoiInput.width, qoiInput.height, qoiInput.data, qoiInput.channels, qoiInput.colorspace);
 
                 // Base64 encoding
                 let base64Data = btoa(String.fromCharCode.apply(null, qoiData));
