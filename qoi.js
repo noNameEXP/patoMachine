@@ -2,6 +2,6 @@
 
 const QOI = {};
 
-QOI.decode = window.decode;
+// Assign the encode function
 QOI.encode = window.encode;
 window.QOI = QOI;
