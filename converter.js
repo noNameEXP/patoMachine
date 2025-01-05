@@ -62,7 +62,7 @@ function convertPNG() {
     };
 
     if (file) {
-        reader.readAsDataURL(file);
+        reader.readAsArrayBuffer(file);//reader.readAsDataURL(file);
     } else {
         alert('Please select a PNG file.');
     }
