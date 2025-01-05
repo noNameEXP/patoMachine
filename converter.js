@@ -1,4 +1,3 @@
-console.log("skid")
 function convertPNG() {
     console.log("convertPNG function called"); // Verify function execution
     const fileInput = document.getElementById('pngFile');
@@ -37,25 +36,25 @@ function convertPNG() {
                     channels: qoiInput.channels,
                     colorspace: qoiInput.colorspace
                 });
-                console.log("QOI Data: ", qoiData);
+                console.log("QOI Data Length: ", qoiData.length);
 
                 // Base64 encoding
                 let base64Data = arrayBufferToBase64(new Uint8Array(qoiData).buffer);
-                console.log("First Base64 Data: ", base64Data);
+                console.log("First Base64 Data Length: ", base64Data.length);
 
                 // zLib.Deflate compression (using pako library)
                 let compressedData = pako.deflate(base64Data);
-                console.log("Compressed Data: ", compressedData);
+                console.log("Compressed Data Length: ", compressedData.length);
 
                 // Final Base64 encoding
-                let finalBase64Data = arrayBufferToBase64(compressedData.buffer);
-                console.log("Final Base64 Data: ", finalBase64Data);
+                let finalBase64Data = arrayBufferToBase64(compressedData);
+                console.log("Final Base64 Data Length: ", finalBase64Data.length);
 
                 // Display the encoded data
                 document.getElementById('output').textContent = finalBase64Data;
             } catch (error) {
-                console.error('Qoi encoding error:', error);
-                alert('An error occurred during Qoi encoding.');
+                console.error('Encoding error:', error);
+                alert('An error occurred during encoding.');
             }
         };
     };
