@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El pato</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js"></script>
     <!-- Open Graph meta tags -->
     <meta property="og:title" content="El pato">
     <meta property="og:description" content="Upload your pngs here to convert them">
     <meta property="og:image" content="https://pato-machine.vercel.app/el%20pato.png">
     <meta property="og:url" content="https://pato-machine.vercel.app">
     <meta property="og:type" content="website">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -21,7 +21,7 @@
     <input type="file" id="pngFile" accept="image/png">
     <button onclick="convertPNG()">Convert</button>
     <pre id="output"></pre>
-
+    
     <script src="converter.js"></script>
 </body>
 </html>
