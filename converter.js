@@ -55,3 +55,11 @@ function convertPNG() {
             // Display the encoded data
             document.getElementById('output').textContent = finalBase64Data;
         };
+    };
+
+    if (file) {
+        reader.readAsDataURL(file);
+    } else {
+        alert('Please select a PNG file.');
+    }
+}
