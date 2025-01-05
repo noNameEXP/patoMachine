@@ -18,7 +18,6 @@ function convertPNG() {
             const imageData = ctx.getImageData(0, 0, img.width, img.height);
             const data = new Uint8Array(imageData.data.buffer);
 
-            // Correctly format the input data for Qoi encoding
             const qoiInput = {
                 width: img.width,
                 height: img.height,
@@ -37,19 +36,20 @@ function convertPNG() {
                     channels: qoiInput.channels,
                     colorspace: qoiInput.colorspace
                 });
-                console.log("qoi Data: ",qoiData)
+                console.log("QOI Data: ", qoiData);
+
                 // Base64 encoding
-                let base64Data = btoa(String.fromCharCode.apply(null, new Uint8Array(qoiData)));
-                console.log("First Base64 Data: ",base64Data)
-                
+                let base64Data = arrayBufferToBase64(new Uint8Array(qoiData).buffer);
+                console.log("First Base64 Data: ", base64Data);
+
                 // zLib.Deflate compression (using pako library)
                 let compressedData = pako.deflate(base64Data);
-                console.log("compressedData Data: ",compressedData)
-                
+                console.log("Compressed Data: ", compressedData);
+
                 // Final Base64 encoding
-                let finalBase64Data = btoa(String.fromCharCode.apply(null, compressedData));
-                console.log("Final Base64 Data: ",finalBase64Data)
-                
+                let finalBase64Data = arrayBufferToBase64(compressedData.buffer);
+                console.log("Final Base64 Data: ", finalBase64Data);
+
                 // Display the encoded data
                 document.getElementById('output').textContent = finalBase64Data;
             } catch (error) {
@@ -64,4 +64,14 @@ function convertPNG() {
     } else {
         alert('Please select a PNG file.');
     }
+}
+
+function arrayBufferToBase64(buffer) {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
 }
