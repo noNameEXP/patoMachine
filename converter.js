@@ -1,5 +1,5 @@
 function convertPNG() {
-    console.log("convertPNG function called"); // Verify function execution
+    console.log("convertPNG function called");
     const fileInput = document.getElementById('pngFile');
     const file = fileInput.files[0];
     const reader = new FileReader();
