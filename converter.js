@@ -37,16 +37,19 @@ function convertPNG() {
                     channels: qoiInput.channels,
                     colorspace: qoiInput.colorspace
                 });
-
+                console.log(qoiData)
                 // Base64 encoding
                 let base64Data = btoa(String.fromCharCode.apply(null, new Uint8Array(qoiData)));
-
+                console.log(base64Data)
+                
                 // zLib.Deflate compression (using pako library)
                 let compressedData = pako.deflate(base64Data);
-
+                console.log(compressedData)
+                
                 // Final Base64 encoding
                 let finalBase64Data = btoa(String.fromCharCode.apply(null, compressedData));
-
+                console.log(finalBase64Data)
+                
                 // Display the encoded data
                 document.getElementById('output').textContent = finalBase64Data;
             } catch (error) {
