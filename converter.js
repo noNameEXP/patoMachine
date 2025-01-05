@@ -1,6 +1,6 @@
 function convertPNG() {
     console.log("convertPNG function called"); // Verify function execution
-    console.log("bruh");
+    console.log("hate")
     const fileInput = document.getElementById('pngFile');
     const file = fileInput.files[0];
     const reader = new FileReader();
@@ -17,7 +17,7 @@ function convertPNG() {
             ctx.drawImage(img, 0, 0);
 
             const imageData = ctx.getImageData(0, 0, img.width, img.height);
-            const data = new Uint8Array(imageData.data);
+            const data = new Uint8Array(imageData.data.buffer);
 
             // Correctly format the input data for Qoi encoding
             const qoiInput = {
@@ -29,19 +29,24 @@ function convertPNG() {
             };
 
             // Qoi encoding using the library
-            let qoiData = QOI.encode(qoiInput);
+            try {
+                let qoiData = QOI.encode(qoiInput);
 
-            // Base64 encoding
-            let base64Data = btoa(String.fromCharCode.apply(null, qoiData));
+                // Base64 encoding
+                let base64Data = btoa(String.fromCharCode.apply(null, qoiData));
 
-            // zLib.Deflate compression (using pako library)
-            let compressedData = pako.deflate(base64Data);
+                // zLib.Deflate compression (using pako library)
+                let compressedData = pako.deflate(base64Data);
 
-            // Final Base64 encoding
-            let finalBase64Data = btoa(String.fromCharCode.apply(null, compressedData));
+                // Final Base64 encoding
+                let finalBase64Data = btoa(String.fromCharCode.apply(null, compressedData));
 
-            // Display the encoded data
-            document.getElementById('output').textContent = finalBase64Data;
+                // Display the encoded data
+                document.getElementById('output').textContent = finalBase64Data;
+            } catch (error) {
+                console.error('Qoi encoding error:', error);
+                alert('An error occurred during Qoi encoding.');
+            }
         };
     };
 
