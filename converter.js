@@ -35,22 +35,14 @@ function convertPNG() {
             // Qoi encoding (placeholder, use appropriate Qoi library)
             let qoiData = qoi.encode(data, img.width, img.height);
 
-            // Base64 encoding in chunks
-            let base64Data = '';
-            for (let i = 0; i < qoiData.length; i += 0x8000) {
-                base64Data += String.fromCharCode.apply(null, qoiData.subarray(i, i + 0x8000));
-            }
-            base64Data = btoa(base64Data);
+            // Base64 encoding
+            let base64Data = btoa(String.fromCharCode.apply(null, qoiData));
 
             // zLib.Deflate compression (using pako library)
             let compressedData = pako.deflate(base64Data);
 
-            // Final Base64 encoding in chunks
-            let finalBase64Data = '';
-            for (let i = 0; i < compressedData.length; i += 0x8000) {
-                finalBase64Data += String.fromCharCode.apply(null, compressedData.subarray(i, i + 0x8000));
-            }
-            finalBase64Data = btoa(finalBase64Data);
+            // Final Base64 encoding
+            let finalBase64Data = btoa(String.fromCharCode.apply(null, compressedData));
 
             // Display the encoded data
             document.getElementById('output').textContent = finalBase64Data;
@@ -62,14 +54,4 @@ function convertPNG() {
     } else {
         alert('Please select a PNG file.');
     }
-}
-
-// Placeholder for Qoi decoding and zLib decompression
-function decodeData(encodedData) {
-    // Decoding steps (reverse the encoding process)
-    let decompressedData = atob(encodedData);
-    let inflatedData = pako.inflate(decompressedData, { to: 'string' });
-    let qoiDecodedData = qoi.decode(inflatedData);
-    
-    return qoiDecodedData;
 }
