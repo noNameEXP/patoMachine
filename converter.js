@@ -1,3 +1,4 @@
+console.log("were back")
 function convertPNG() {
     console.log("convertPNG function called"); // Verify function execution
     const fileInput = document.getElementById('pngFile');
@@ -16,16 +17,7 @@ function convertPNG() {
             ctx.drawImage(img, 0, 0);
 
             const imageData = ctx.getImageData(0, 0, img.width, img.height);
-            let data = imageData.data;
-
-            // Convert to Uint8Array if necessary
-            if (!(data instanceof Uint8Array)) {
-                data = new Uint8Array(imageData.data.buffer);
-            }
-
-            // Log the type and length of data
-            console.log('Type of data:', data.constructor.name);
-            console.log('Data length:', data.length);
+            const data = new Uint8Array(imageData.data.buffer);
 
             // Correctly format the input data for Qoi encoding
             const qoiInput = {
@@ -38,18 +30,17 @@ function convertPNG() {
 
             console.log("Formatted QOI Input Data:", qoiInput);
 
-            // Qoi encoding using the library
             try {
-                // Confirming the data is a Uint8Array before passing it to the encoder
-                if (!(qoiInput.data instanceof Uint8Array)) {
-                    throw new Error('Data is not a Uint8Array');
-                }
-
-                // Assuming QOI.encode expects separate arguments
-                let qoiData = QOI.encode(qoiInput.width, qoiInput.height, qoiInput.data, qoiInput.channels, qoiInput.colorspace);
+                // Use the locally included QOI encode function
+                let qoiData = QOI.encode(qoiInput.data, {
+                    width: qoiInput.width,
+                    height: qoiInput.height,
+                    channels: qoiInput.channels,
+                    colorspace: qoiInput.colorspace
+                });
 
                 // Base64 encoding
-                let base64Data = btoa(String.fromCharCode.apply(null, qoiData));
+                let base64Data = btoa(String.fromCharCode.apply(null, new Uint8Array(qoiData)));
 
                 // zLib.Deflate compression (using pako library)
                 let compressedData = pako.deflate(base64Data);
