@@ -22,10 +22,7 @@ function convertPNG() {
             const data = new Uint8Array(imageData.data.buffer);
             console.log("Img Data: ", data);
 
-            // Base64 encoding of raw image data for comparison
-            let extraBase64Data = arrayBufferToBase64(data);
-            console.log("Extra Base64: ", extraBase64Data);
-
+            // Encode image data to QOI format
             const qoiInput = {
                 width: img.width,
                 height: img.height,
@@ -37,7 +34,6 @@ function convertPNG() {
             console.log("Formatted QOI Input Data:", qoiInput);
 
             try {
-                // 1. Encode image data to QOI
                 let qoiData = QOI.encode(qoiInput.data, {
                     width: qoiInput.width,
                     height: qoiInput.height,
@@ -46,17 +42,17 @@ function convertPNG() {
                 });
                 console.log("QOI Data Length: ", qoiData);
 
-                // 2. Convert QOI data to Base64
+                // Convert QOI data to base64
                 let base64Data = arrayBufferToBase64(new Uint8Array(qoiData).buffer);
                 console.log("First Base64 Data: ", base64Data);
 
-                // 3. Compress Base64 string using zLib Deflate (pako library)
+                // Compress base64 string using zLib Deflate (pako library)
                 let compressedData = pako.deflate(base64Data);
-                console.log("Compressed Data: ", compressedData);
+                console.log("Compressed Data Length: ", compressedData.length);
 
-                // 4. Convert compressed data to Base64
+                // Convert compressed data to base64
                 let finalBase64Data = arrayBufferToBase64(compressedData);
-                console.log("Final Base64 Data: ", finalBase64Data);
+                console.log("Final Base64 Data Length: ", finalBase64Data.length);
 
                 // Display the encoded data
                 document.getElementById('output').textContent = finalBase64Data;
@@ -74,7 +70,7 @@ function convertPNG() {
     }
 }
 
-// Alternative method to convert Uint8Array to Base64
+// Convert ArrayBuffer to Base64
 function arrayBufferToBase64(buffer) {
     let binary = '';
     const bytes = new Uint8Array(buffer);
