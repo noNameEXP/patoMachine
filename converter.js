@@ -50,7 +50,7 @@ function convertPNG() {
                 let base64Data = arrayBufferToBase64(new Uint8Array(qoiData).buffer);
                 console.log("First Base64 Data: ", base64Data);
 
-                // 3. Compress Base64 string using zLib.Deflate (pako library)
+                // 3. Compress Base64 string using zLib Deflate (pako library)
                 let compressedData = pako.deflate(base64Data);
                 console.log("Compressed Data: ", compressedData);
 
