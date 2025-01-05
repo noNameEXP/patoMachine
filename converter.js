@@ -1,12 +1,15 @@
 function convertPNG() {
-    console.log("convertPNG function called"); // Verify function execution
+    console.log("convertPNG function called");
     const fileInput = document.getElementById('pngFile');
     const file = fileInput.files[0];
     const reader = new FileReader();
 
     reader.onload = function(event) {
+        const arrayBuffer = event.target.result;
+
+        const blob = new Blob([arrayBuffer], { type: 'image/png' });
         const img = new Image();
-        img.src = event.target.result;
+        img.src = URL.createObjectURL(blob);
 
         img.onload = function() {
             const canvas = document.createElement('canvas');
@@ -17,8 +20,7 @@ function convertPNG() {
 
             const imageData = ctx.getImageData(0, 0, img.width, img.height);
             const data = new Uint8Array(imageData.data.buffer);
-            console.log("Img Data: ", data);
-            
+
             const qoiInput = {
                 width: img.width,
                 height: img.height,
@@ -37,13 +39,12 @@ function convertPNG() {
                     channels: qoiInput.channels,
                     colorspace: qoiInput.colorspace
                 });
-                console.log("QOI Data Length: ", qoiData);
+                console.log("QOI Data Length: ", qoiData.length);
 
                 // Base64 encoding
                 let base64Data = arrayBufferToBase64(new Uint8Array(qoiData).buffer);
                 console.log("First Base64 Data Length: ", base64Data.length);
-                console.log("First Base64: ", base64Data);
-                
+
                 // zLib.Deflate compression (using pako library)
                 let compressedData = pako.deflate(base64Data);
                 console.log("Compressed Data Length: ", compressedData.length);
@@ -51,7 +52,7 @@ function convertPNG() {
                 // Final Base64 encoding
                 let finalBase64Data = arrayBufferToBase64(compressedData);
                 console.log("Final Base64 Data Length: ", finalBase64Data.length);
-                console.log("Final Base64: ", finalBase64Data);
+
                 // Display the encoded data
                 document.getElementById('output').textContent = finalBase64Data;
             } catch (error) {
@@ -62,7 +63,7 @@ function convertPNG() {
     };
 
     if (file) {
-        reader.readAsArrayBuffer(file);//reader.readAsDataURL(file);
+        reader.readAsArrayBuffer(file);  // Read the file as ArrayBuffer
     } else {
         alert('Please select a PNG file.');
     }
