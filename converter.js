@@ -41,7 +41,8 @@ function convertPNG() {
                 // Base64 encoding
                 let base64Data = arrayBufferToBase64(new Uint8Array(qoiData).buffer);
                 console.log("First Base64 Data Length: ", base64Data.length);
-
+                console.log("First Base64: ", base64Data);
+                
                 // zLib.Deflate compression (using pako library)
                 let compressedData = pako.deflate(base64Data);
                 console.log("Compressed Data Length: ", compressedData.length);
@@ -49,7 +50,7 @@ function convertPNG() {
                 // Final Base64 encoding
                 let finalBase64Data = arrayBufferToBase64(compressedData);
                 console.log("Final Base64 Data Length: ", finalBase64Data.length);
-
+                console.log("Final Base64: ", finalBase64Data);
                 // Display the encoded data
                 document.getElementById('output').textContent = finalBase64Data;
             } catch (error) {
