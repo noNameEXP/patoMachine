@@ -35,14 +35,23 @@ function convertPNG() {
             // Qoi encoding
             let qoiData = qoi.encode(data, img.width, img.height);
 
-            // Base64 encoding
-            let base64Data = btoa(String.fromCharCode.apply(null, qoiData));
+            // Base64 encoding in chunks
+            let base64DataChunks = [];
+            const chunkSize = 0x8000; // 32KB per chunk
+            for (let i = 0; i < qoiData.length; i += chunkSize) {
+                base64DataChunks.push(String.fromCharCode.apply(null, qoiData.subarray(i, i + chunkSize)));
+            }
+            let base64Data = btoa(base64DataChunks.join(''));
 
             // zLib.Deflate compression (using pako library)
             let compressedData = pako.deflate(base64Data, { to: 'string' });
 
             // Final Base64 encoding
-            let finalBase64Data = btoa(compressedData);
+            let finalBase64DataChunks = [];
+            for (let i = 0; i < compressedData.length; i += chunkSize) {
+                finalBase64DataChunks.push(String.fromCharCode.apply(null, compressedData.subarray(i, i + chunkSize)));
+            }
+            let finalBase64Data = btoa(finalBase64DataChunks.join(''));
 
             // Display the encoded data
             document.getElementById('output').textContent = finalBase64Data;
