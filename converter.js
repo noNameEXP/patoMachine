@@ -1,3 +1,6 @@
+// Placeholder for Qoi encoding/decoding and zLib compression libraries
+// You will need to include these libraries or find suitable ones for your project
+
 function convertPNG() {
     const fileInput = document.getElementById('pngFile');
     const file = fileInput.files[0];
@@ -17,17 +20,20 @@ function convertPNG() {
             const imageData = ctx.getImageData(0, 0, img.width, img.height);
             const data = imageData.data;
 
-            // Process the image data and convert to the desired format
-            let convertedData = "Converted Data:\n";
-            for (let i = 0; i < data.length; i += 4) {
-                convertedData += `R: ${data[i]}, G: ${data[i+1]}, B: ${data[i+2]}, A: ${data[i+3]}\n`;
-            }
+            // Qoi encoding (placeholder, use appropriate Qoi library)
+            let qoiData = qoi.encode(data, img.width, img.height);
 
-            // Display the converted data
-            document.getElementById('output').textContent = convertedData;
+            // Base64 encoding
+            let base64Data = btoa(String.fromCharCode.apply(null, qoiData));
 
-            // Further encoding steps (Qoi -> base64 -> zLib.Deflate -> base64) would go here
-            // You would need libraries for Qoi encoding and zLib compression in JavaScript
+            // zLib.Deflate compression (using pako library)
+            let compressedData = pako.deflate(base64Data, { to: 'string' });
+
+            // Final Base64 encoding
+            let finalBase64Data = btoa(compressedData);
+
+            // Display the encoded data
+            document.getElementById('output').textContent = finalBase64Data;
         };
     };
 
@@ -36,4 +42,14 @@ function convertPNG() {
     } else {
         alert('Please select a PNG file.');
     }
+}
+
+// Placeholder for Qoi decoding and zLib decompression
+function decodeData(encodedData) {
+    // Decoding steps (reverse the encoding process)
+    let decompressedData = atob(encodedData);
+    let inflatedData = pako.inflate(decompressedData, { to: 'string' });
+    let qoiDecodedData = qoi.decode(inflatedData);
+    
+    return qoiDecodedData;
 }
