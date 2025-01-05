@@ -36,7 +36,7 @@ function convertPNG() {
                     channels: qoiInput.channels,
                     colorspace: qoiInput.colorspace
                 });
-                console.log("QOI Data Length: ", qoiData.length);
+                console.log("QOI Data Length: ", qoiData);
 
                 // Base64 encoding
                 let base64Data = arrayBufferToBase64(new Uint8Array(qoiData).buffer);
