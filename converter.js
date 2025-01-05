@@ -1,5 +1,5 @@
 function convertPNG() {
-    console.log("convertPNG function called");
+    console.log("convertPNG function called"); // Verify function execution
     const fileInput = document.getElementById('pngFile');
     const file = fileInput.files[0];
     const reader = new FileReader();
@@ -44,13 +44,13 @@ function convertPNG() {
                     channels: qoiInput.channels,
                     colorspace: qoiInput.colorspace
                 });
-                console.log("QOI Data: ", qoiData);
+                console.log("QOI Data Length: ", qoiData);
 
                 // 2. Convert QOI data to Base64
                 let base64Data = arrayBufferToBase64(new Uint8Array(qoiData).buffer);
                 console.log("First Base64 Data: ", base64Data);
 
-                // 3. Compress Base64 string using zLib Deflate (pako library)
+                // 3. Compress Base64 string using zLib.Deflate (pako library)
                 let compressedData = pako.deflate(base64Data);
                 console.log("Compressed Data: ", compressedData);
 
