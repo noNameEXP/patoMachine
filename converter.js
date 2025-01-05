@@ -1,3 +1,4 @@
+console.log("skid")
 function convertPNG() {
     console.log("convertPNG function called"); // Verify function execution
     const fileInput = document.getElementById('pngFile');
