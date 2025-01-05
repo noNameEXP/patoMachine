@@ -16,7 +16,16 @@ function convertPNG() {
             ctx.drawImage(img, 0, 0);
 
             const imageData = ctx.getImageData(0, 0, img.width, img.height);
-            const data = new Uint8Array(imageData.data.buffer);
+            let data = imageData.data;
+
+            // Convert to Uint8Array if necessary
+            if (!(data instanceof Uint8Array)) {
+                data = new Uint8Array(imageData.data.buffer);
+            }
+
+            // Log the type and length of data
+            console.log('Type of data:', data.constructor.name);
+            console.log('Data length:', data.length);
 
             // Correctly format the input data for Qoi encoding
             const qoiInput = {
