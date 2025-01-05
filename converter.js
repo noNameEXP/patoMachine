@@ -19,6 +19,10 @@ function convertPNG() {
             const data = new Uint8Array(imageData.data.buffer);
             console.log("Img Data: ", data);
             
+             // Base64 encoding
+            let base64Data = arrayBufferToBase64(data);
+            console.log("Extra Base64: ", base64Data);
+            
             const qoiInput = {
                 width: img.width,
                 height: img.height,
