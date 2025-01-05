@@ -1,4 +1,3 @@
-console.log("were back")
 function convertPNG() {
     console.log("convertPNG function called"); // Verify function execution
     const fileInput = document.getElementById('pngFile');
