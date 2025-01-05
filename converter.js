@@ -1,5 +1,5 @@
 function convertPNG() {
-    console.log("convertPNG function called");
+    console.log("convertPNG function called"); // Verify function execution
     const fileInput = document.getElementById('pngFile');
     const file = fileInput.files[0];
     const reader = new FileReader();
@@ -32,7 +32,7 @@ function convertPNG() {
             console.log("Formatted QOI Input Data:", qoiInput);
 
             try {
-                // Use the locally included QOI encode function
+                // 1. Encode image data to QOI
                 let qoiData = QOI.encode(qoiInput.data, {
                     width: qoiInput.width,
                     height: qoiInput.height,
@@ -41,16 +41,16 @@ function convertPNG() {
                 });
                 console.log("QOI Data Length: ", qoiData.length);
 
-                // Base64 encoding
-                let base64Data = arrayBufferToBase64(new Uint8Array(qoiData).buffer);
+                // 2. Convert QOI data to base64 using alternative method
+                let base64Data = uint8ArrayToBase64(new Uint8Array(qoiData));
                 console.log("First Base64 Data Length: ", base64Data.length);
 
-                // zLib.Deflate compression (using pako library)
+                // 3. Compress base64 string using zLib.Deflate (pako library)
                 let compressedData = pako.deflate(base64Data);
                 console.log("Compressed Data Length: ", compressedData.length);
 
-                // Final Base64 encoding
-                let finalBase64Data = arrayBufferToBase64(compressedData);
+                // 4. Convert compressed data to base64 using alternative method
+                let finalBase64Data = uint8ArrayToBase64(compressedData);
                 console.log("Final Base64 Data Length: ", finalBase64Data.length);
 
                 // Display the encoded data
@@ -69,12 +69,12 @@ function convertPNG() {
     }
 }
 
-function arrayBufferToBase64(buffer) {
+// Alternative method to convert Uint8Array to base64
+function uint8ArrayToBase64(uint8Array) {
     let binary = '';
-    const bytes = new Uint8Array(buffer);
-    const len = bytes.byteLength;
+    const len = uint8Array.byteLength;
     for (let i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
+        binary += String.fromCharCode(uint8Array[i]);
     }
     return btoa(binary);
 }
