@@ -48,7 +48,7 @@ function convertPNG() {
                 console.log("Compressed Data: ", compressedData);
 
                 // Final Base64 encoding
-                let finalBase64Data = arrayBufferToBase64(compressedData.buffer);
+                let finalBase64Data = arrayBufferToBase64(compressedData)//.buffer);
                 console.log("Final Base64 Data: ", finalBase64Data);
 
                 // Display the encoded data
