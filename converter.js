@@ -40,6 +40,11 @@ function convertPNG() {
 
             // Qoi encoding using the library
             try {
+                // Confirming the data is a Uint8Array before passing it to the encoder
+                if (!(qoiInput.data instanceof Uint8Array)) {
+                    throw new Error('Data is not a Uint8Array');
+                }
+
                 // Assuming QOI.encode expects separate arguments
                 let qoiData = QOI.encode(qoiInput.width, qoiInput.height, qoiInput.data, qoiInput.channels, qoiInput.colorspace);
 
