@@ -16,10 +16,19 @@ function convertPNG() {
             ctx.drawImage(img, 0, 0);
 
             const imageData = ctx.getImageData(0, 0, img.width, img.height);
-            const data = imageData.data;
+            const data = new Uint8Array(imageData.data);
+
+            // Correctly format the input data for Qoi encoding
+            const qoiInput = {
+                width: img.width,
+                height: img.height,
+                data: data,
+                channels: 4, // assuming RGBA
+                colorspace: 0 // assuming sRGB
+            };
 
             // Qoi encoding using the library
-            let qoiData = QOI.encode({ width: img.width, height: img.height, data: data });
+            let qoiData = QOI.encode(qoiInput);
 
             // Base64 encoding
             let base64Data = btoa(String.fromCharCode.apply(null, qoiData));
