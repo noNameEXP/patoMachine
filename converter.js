@@ -17,7 +17,8 @@ function convertPNG() {
 
             const imageData = ctx.getImageData(0, 0, img.width, img.height);
             const data = new Uint8Array(imageData.data.buffer);
-
+            console.log("Img Data: ", data);
+            
             const qoiInput = {
                 width: img.width,
                 height: img.height,
