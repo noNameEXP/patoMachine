@@ -48,16 +48,16 @@ function convertPNG() {
 
                 console.log("QOI Encoded Data Length:", qoiData.length);
 
-                // Convert QOI data to base64
-                let base64Data = arrayBufferToBase64(new Uint8Array(qoiData).buffer);
+                // Convert QOI data to Base64 using modern approach
+                let base64Data = btoa(String.fromCharCode.apply(null, new Uint8Array(qoiData)));
                 console.log("Base64 Encoded QOI Data:", base64Data);
 
                 // Compress base64 string using zLib Deflate (pako library)
                 let compressedData = pako.deflate(base64Data);
                 console.log("Compressed Data Length:", compressedData.length);
 
-                // Convert compressed data to base64
-                let finalBase64Data = arrayBufferToBase64(compressedData);
+                // Convert compressed data to Base64 using modern approach
+                let finalBase64Data = btoa(String.fromCharCode.apply(null, compressedData));
                 console.log("Final Base64 Encoded Data:", finalBase64Data);
 
                 // Display the encoded data
@@ -70,18 +70,12 @@ function convertPNG() {
     };
 
     if (file) {
-        reader.readAsArrayBuffer(file); 
+        reader.readAsArrayBuffer(file);
     } else {
         alert('Please select a PNG file.');
     }
 }
-
+// Convert ArrayBuffer to Base64 using modern approach
 function arrayBufferToBase64(buffer) {
-    let binary = '';
-    const bytes = new Uint8Array(buffer);
-    const len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
+    return btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
 }
