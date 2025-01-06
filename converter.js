@@ -1,26 +1,33 @@
-function convertPNG() {
-    console.log("convertPNG function called");
-    const fileInput = document.getElementById('pngFile');
-    const file = fileInput.files[0];
+const fetch = require('node-fetch'); // Import node-fetch
 
-    if (!file) {
-        alert('Please select a PNG file.');
-        return;
+module.exports = async (req, res) => {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ message: 'Only POST requests are allowed' });
     }
 
-    const img = new Image();
-    img.src = URL.createObjectURL(file);
+    const { imageUrl } = req.body;
 
-    img.onload = function() {
-        const canvas = document.createElement('canvas');
+    if (!imageUrl) {
+        return res.status(400).json({ message: 'Image URL is required' });
+    }
+
+    try {
+        // Fetch the image from the provided URL
+        const response = await fetch(imageUrl);
+        const buffer = await response.buffer();
+
+        // Create a canvas and draw the image
+        const { createCanvas, loadImage } = require('canvas');
+        const canvas = createCanvas();
         const ctx = canvas.getContext('2d');
+        const img = await loadImage(buffer);
+        
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
 
         const imageData = ctx.getImageData(0, 0, img.width, img.height);
         const data = new Uint8Array(imageData.data.buffer);
-        console.log("Image Data Loaded:", data);
 
         // Encode image data to QOI format
         const qoiInput = {
@@ -31,53 +38,26 @@ function convertPNG() {
             data: data
         };
 
-        console.log("Formatted QOI Input Data:", qoiInput);
+        let qoiData = QOI.encode(qoiInput.data, {
+            width: qoiInput.width,
+            height: qoiInput.height,
+            channels: qoiInput.channels,
+            colorspace: qoiInput.colorspace
+        });
 
-        try {
-            let qoiData = QOI.encode(qoiInput.data, {
-                width: qoiInput.width,
-                height: qoiInput.height,
-                channels: qoiInput.channels,
-                colorspace: qoiInput.colorspace
-            });
-
-            if (!qoiData) {
-                throw new Error("QOI encoding failed.");
-            }
-
-            console.log("QOI Encoded Data Length:", qoiData.length);
-
-            // Convert QOI data to Base64
-            let base64Data = arrayBufferToBase64(qoiData);
-            console.log("Base64 Encoded QOI Data:", base64Data);
-
-            // Send the encoded data to the Vercel website
-            fetch('https://pato-machine.vercel.app//api/upload', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ image: base64Data })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                document.getElementById('output').textContent = 'Image uploaded successfully!';
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('An error occurred during the upload.');
-            });
-        } catch (error) {
-            console.error('Encoding Error:', error);
-            alert('An error occurred during encoding.');
+        if (!qoiData) {
+            throw new Error("QOI encoding failed.");
         }
-    };
 
-    img.onerror = function() {
-        alert('An error occurred while loading the image.');
-    };
-}
+        // Convert QOI data to Base64
+        let base64Data = arrayBufferToBase64(qoiData);
+
+        res.status(200).json({ base64Data });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: 'An error occurred while processing the image.' });
+    }
+};
 
 // Convert ArrayBuffer to Base64
 function arrayBufferToBase64(buffer) {
