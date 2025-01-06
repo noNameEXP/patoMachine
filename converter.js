@@ -56,10 +56,6 @@ function convertPNG() {
             let compressedData = pako.deflate(base64Data);
             console.log("Compressed Data Length:", compressedData.length);
 
-            // Convert compressed data to Base64
-            let finalBase64Data = arrayBufferToBase64(compressedData);
-            console.log("Final Base64 Encoded Data:", finalBase64Data);
-
             // Display the encoded data
             document.getElementById('output').textContent = finalBase64Data;
         } catch (error) {
