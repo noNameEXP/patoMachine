@@ -46,21 +46,21 @@ function convertPNG() {
             }
 
             console.log("QOI Encoded Data Length:", qoiData.length);
-
+            document.getElementById('output').textContent = qoiData;
             // Convert QOI data to Base64
-            let base64Data = arrayBufferToBase64(qoiData);
-            console.log("Base64 Encoded QOI Data:", base64Data);
+            //let base64Data = arrayBufferToBase64(qoiData);
+            //console.log("Base64 Encoded QOI Data:", base64Data);
 
             // Compress base64 string using zLib Deflate (pako library)
-            let compressedData = pako.deflate(base64Data);
-            console.log("Compressed Data Length:", compressedData.length);
+            //let compressedData = pako.deflate(base64Data);
+            //console.log("Compressed Data Length:", compressedData.length);
 
             // Convert compressed data to Base64
-            let finalBase64Data = arrayBufferToBase64(compressedData);
-            console.log("Final Base64 Encoded Data:", finalBase64Data);
+            //let finalBase64Data = arrayBufferToBase64(compressedData);
+            //console.log("Final Base64 Encoded Data:", finalBase64Data);
 
             // Display the encoded data
-            document.getElementById('output').textContent = finalBase64Data;
+            //document.getElementById('output').textContent = finalBase64Data;
         } catch (error) {
             console.error('Encoding Error:', error);
             alert('An error occurred during encoding.');
