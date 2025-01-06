@@ -1,33 +1,26 @@
-const fetch = require('node-fetch'); // Import node-fetch
+function convertPNG() {
+    console.log("convertPNG function called");
+    const fileInput = document.getElementById('pngFile');
+    const file = fileInput.files[0];
 
-module.exports = async (req, res) => {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Only POST requests are allowed' });
+    if (!file) {
+        alert('Please select a PNG file.');
+        return;
     }
 
-    const { imageUrl } = req.body;
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
 
-    if (!imageUrl) {
-        return res.status(400).json({ message: 'Image URL is required' });
-    }
-
-    try {
-        // Fetch the image from the provided URL
-        const response = await fetch(imageUrl);
-        const buffer = await response.buffer();
-
-        // Create a canvas and draw the image
-        const { createCanvas, loadImage } = require('canvas');
-        const canvas = createCanvas();
+    img.onload = function() {
+        const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        const img = await loadImage(buffer);
-        
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
 
         const imageData = ctx.getImageData(0, 0, img.width, img.height);
         const data = new Uint8Array(imageData.data.buffer);
+        console.log("Image Data Loaded:", data);
 
         // Encode image data to QOI format
         const qoiInput = {
@@ -38,26 +31,47 @@ module.exports = async (req, res) => {
             data: data
         };
 
-        let qoiData = QOI.encode(qoiInput.data, {
-            width: qoiInput.width,
-            height: qoiInput.height,
-            channels: qoiInput.channels,
-            colorspace: qoiInput.colorspace
-        });
+        console.log("Formatted QOI Input Data:", qoiInput);
 
-        if (!qoiData) {
-            throw new Error("QOI encoding failed.");
+        try {
+            let qoiData = QOI.encode(qoiInput.data, {
+                width: qoiInput.width,
+                height: qoiInput.height,
+                channels: qoiInput.channels,
+                colorspace: qoiInput.colorspace
+            });
+
+            if (!qoiData) {
+                throw new Error("QOI encoding failed.");
+            }
+
+            console.log("QOI Encoded Data Length:", qoiData.length);
+            //console.log(qoiData);
+            //document.getElementById('output').textContent = qoiData;
+            // Convert QOI data to Base64
+            let base64Data = arrayBufferToBase64(qoiData);
+            console.log("Base64 Encoded QOI Data:", base64Data);
+
+            // Compress base64 string using zLib Deflate (pako library)
+            let compressedData = pako.deflate(base64Data);
+            console.log("Compressed Data Length:", compressedData.length);
+
+            // Convert compressed data to Base64
+            let finalBase64Data = arrayBufferToBase64(compressedData);
+            console.log("Final Base64 Encoded Data:", finalBase64Data);
+
+            // Display the encoded data
+            document.getElementById('output').textContent = finalBase64Data;
+        } catch (error) {
+            console.error('Encoding Error:', error);
+            alert('An error occurred during encoding.');
         }
+    };
 
-        // Convert QOI data to Base64
-        let base64Data = arrayBufferToBase64(qoiData);
-
-        res.status(200).json({ base64Data });
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ message: 'An error occurred while processing the image.' });
-    }
-};
+    img.onerror = function() {
+        alert('An error occurred while loading the image.');
+    };
+}
 
 // Convert ArrayBuffer to Base64
 function arrayBufferToBase64(buffer) {
