@@ -51,8 +51,23 @@ function convertPNG() {
             let base64Data = arrayBufferToBase64(qoiData);
             console.log("Base64 Encoded QOI Data:", base64Data);
 
-            // Display the encoded data
-            document.getElementById('output').textContent = base64Data;
+            // Send the encoded data to the Vercel website
+            fetch('https://pato-machine.vercel.app//api/upload', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ image: base64Data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                document.getElementById('output').textContent = 'Image uploaded successfully!';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred during the upload.');
+            });
         } catch (error) {
             console.error('Encoding Error:', error);
             alert('An error occurred during encoding.');
