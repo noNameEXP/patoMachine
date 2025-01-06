@@ -46,6 +46,7 @@ function convertPNG() {
             }
 
             console.log("QOI Encoded Data Length:", qoiData.length);
+            console.log(qoiData);
             document.getElementById('output').textContent = qoiData;
             // Convert QOI data to Base64
             //let base64Data = arrayBufferToBase64(qoiData);
