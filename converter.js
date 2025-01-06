@@ -57,7 +57,7 @@ function convertPNG() {
             console.log("Compressed Data Length:", compressedData.length);
 
             // Display the encoded data
-            document.getElementById('output').textContent = finalBase64Data;
+            document.getElementById('output').textContent = compressedData;
         } catch (error) {
             console.error('Encoding Error:', error);
             alert('An error occurred during encoding.');
